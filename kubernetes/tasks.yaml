@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tasks-service
+spec:
+  selector:
+    app: tasks
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasks
+  template:
+    metadata:
+      labels:
+        app: tasks
+    spec:
+      containers:
+      - name: tasks
+        image: schcsaba/kub-dep-tasks:latest
+        env:
+          - name: MONGODB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: mongodb_username
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: mongodb_password
+          - name: MONGODB_DEFAULT_DATABASE
+            value: users
+          - name: AUTH_API_ADDRESS
+            value: 'auth-service.default:3000'

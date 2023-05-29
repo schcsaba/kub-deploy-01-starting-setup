@@ -56,7 +56,7 @@ spec:
                   key: mongodb_password
             - name: MONGODB_DEFAULT_DATABASE
               value: users
-            - name: AUTH_API_ADDRESSS
+            - name: AUTH_API_ADDRESS
               value: 'auth-service.default:3000'
       volumes:
         - name: vultr-volume
